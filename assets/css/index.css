@@ -1,0 +1,52 @@
+body{
+    background: #f8f8f8;
+}
+
+.wrapper{
+    width: 80%;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding: 1.5%;
+    border: 2px solid #f00;
+    border-radius: 8px;
+}
+
+.title{
+    text-align: center;
+}
+
+.img-div{
+    text-align: center;
+    padding: 16px;
+}
+
+.img-container{
+    width: 100%;
+}
+
+.event-div{
+    margin-top: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.able-div{
+    margin-top: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.select-div{
+    margin-top: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.none{
+    display: none;
+}
+
+.select-canvas{
+    height: 0px;
+    width: 0px;
+}

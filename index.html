@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JQuery 이미지 자르기 예제</title>
+
+    <link rel="stylesheet" href="assets/css/index.css">
+    <link rel="stylesheet" href="assets/css/jquery.Jcrop.css">
+    <link rel="stylesheet" href="assets/css/jquery.Jcrop.min.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div>
+            <h2 class="title">JQuery 이미지 자르기 예제</h2>
+        </div>
+        <div class="img-div">
+            <img id="main-img" class="img-container" src="assets/img/18063001.jpg" />
+        </div>
+        <div class="event-div">
+            <label>X1 <input class="event-loc-res" type="text" size="4" id="x1" name="x1" disabled /></label>
+            <label>Y1 <input class="event-loc-res" type="text" size="4" id="y1" name="y1"  disabled /></label>
+            <label>X2 <input class="event-loc-res" type="text" size="4" id="x2" name="x2"  disabled /></label>
+            <label>Y2 <input class="event-loc-res" type="text" size="4" id="y2" name="y2"  disabled /></label>
+            <label>W <input class="event-loc-res" type="text" size="4" id="w" name="w"  disabled /></label>
+            <label>H <input class="event-loc-res" type="text" size="4" id="h" name="h"  disabled /></label>
+        </div>
+        <div class="able-div">
+            <button id="enable-btn" onclick="enableBtn()" disabled>enable</button>
+            <button id="disable-btn" onclick="disableBtn()">disable</button>
+        </div>
+        <div class="select-div">
+            <button id="select-btn" onclick="selectBtn()">select</button>
+            <div class="">
+                <canvas id="select-canvas"></canvas>
+            </div>
+            <img id="select-img" class="none" />
+        </div>
+    </div>
+    
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.Jcrop.js"></script>
+    <script src="assets/js/jquery.Jcrop.min.js"></script>
+    <script src="assets/js/jquery.color.js"></script>
+    <script type="text/javascript" >
+        var jcrop_api;
+
+        $(document).ready(function() {
+            $('#main-img').Jcrop({
+                onChange:   showCoords,
+                onSelect:   showCoords,
+                onRelease:  clearCoords
+            },function(){
+                jcrop_api = this;
+                jcrop_api.setOptions({ bgColor: 'black', bgOpacity: 0.4 });
+                jcrop_api.setOptions({ allowSelect: true });
+                jcrop_api.setOptions({ allowMove: true });
+                jcrop_api.setOptions({ allowResize: true });
+                jcrop_api.ui.selection.addClass('jcrop-dark');
+            });
+        }); 
+
+        $('#coords').on('change','input',function(e){
+            var x1 = $('#x1').val(),
+                x2 = $('#x2').val(),
+                y1 = $('#y1').val(),
+                y2 = $('#y2').val();
+            jcrop_api.setSelect([x1,y1,x2,y2]);
+        });
+
+        function showCoords(c){
+            $('#x1').val(c.x);
+            $('#y1').val(c.y);
+            $('#x2').val(c.x2);
+            $('#y2').val(c.y2);
+            $('#w').val(c.w);
+            $('#h').val(c.h);
+        };
+
+        function clearCoords(){
+            $('.event-loc-res').val('');
+        };
+
+        function enableBtn(){
+            $('#enable-btn').prop('disabled', true);
+            $('#disable-btn').prop('disabled', false);
+
+            jcrop_api.enable();
+        }
+
+        function disableBtn(){
+            $('#enable-btn').prop('disabled', false);
+            $('#disable-btn').prop('disabled', true);
+
+            jcrop_api.release();
+            jcrop_api.disable();
+            $('.requiresjcrop').hide();
+        }
+
+        function cropImage(image, croppingCoords) {
+            var cc = croppingCoords;
+            var workCan = document.createElement("canvas"); // create a canvas
+            workCan.width = Math.floor(cc.width);  // set the canvas resolution to the cropped image size
+            workCan.height = Math.floor(cc.height);
+            var ctx = workCan.getContext("2d");    // get a 2D rendering interface
+            ctx.drawImage(image, -Math.floor(cc.x), -Math.floor(cc.y)); // draw the image offset to place it correctly on the cropped region
+            image.src = workCan.toDataURL();       // set the image source to the canvas as a data URL
+            return image;
+        }
+
+        function selectBtn(){
+            var x1 = $('#x1').val();
+            var y1 = $('#y1').val();
+            var x2 = $('#x2').val();
+            var y2 = $('#y2').val();
+            var w = $('#w').val();
+            var h = $('#h').val();
+            var canvas = document.getElementById('select-canvas');
+            var ctx = canvas.getContext("2d");
+            var img = document.getElementById('main-img');
+            ctx.drawImage(img, 0, 0);
+            var imgData = ctx.getImageData(x1, y1, w, h);
+            ctx.putImageData(imgData, 0, 0);
+        }
+
+    </script>
+</body>
+</html>
